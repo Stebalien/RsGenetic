@@ -45,9 +45,7 @@ pub trait Simulation<T: Phenotype> {
     type B: Builder<Box<Self>>;
 
     /// Create a `Builder` to create an instance.
-    /// Because the population is a required parameter, you have to pass it here,
-    /// instead of using a builder function.
-    fn builder(population: &Vec<Box<T>>) -> Self::B;
+    fn builder() -> Self::B;
     /// Run the simulation completely.
     fn run(&mut self) -> RunResult;
     /// Make one step in the simulation. This function returns a `StepResult`:
@@ -67,8 +65,14 @@ pub trait Simulation<T: Phenotype> {
     /// or an error string indicating what went wrong.
     fn get(&self) -> SimResult<T>;
     /// Get the number of nanoseconds spent running, or `None` in case of an overflow.
+    ///
+    /// When `Self` is `par::Simulator`, i.e. a parallel simulator is used,
+    /// the duration is the average duration of all child simulators.
     fn time(&self) -> Option<NanoSecond>;
     /// Get the number of iterations the `Simulator` has executed so far.
+    ///
+    /// When `Self` is `par::Simulator`, i.e. a parallel simulator is used,
+    /// this returns the number of iterations made by the parallel simulator itself.
     fn iterations(&self) -> u64;
 }
 

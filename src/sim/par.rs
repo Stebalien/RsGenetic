@@ -3,6 +3,9 @@
 //! sequential `Simulator`s in parallel on multiple threads,
 //! and communicates every few iterations to obtain better
 //! results.
+//!
+//! To use a `Simulator`, you need a `SimulatorBuilder`, which you can
+//! obtain by calling `Simulator::builder()`.
 
 use pheno::Phenotype;
 use super::*;
@@ -18,7 +21,6 @@ pub struct Simulator<T: Phenotype>
 {
     simulators: Vec<seq::Simulator<T>>,
     iter_limit: IterLimit,
-    fitness_type: FitnessType,
     earlystopper: Option<EarlyStopper>,
     duration: Option<NanoSecond>,
     error: Option<String>,
@@ -27,12 +29,11 @@ pub struct Simulator<T: Phenotype>
 impl<T: Phenotype> Simulation<T> for Simulator<T> {
     type B = SimulatorBuilder<T>;
 
-    fn builder(pop: &Vec<Box<T>>) -> SimulatorBuilder<T> {
+    fn builder() -> SimulatorBuilder<T> {
         SimulatorBuilder {
             sim: Simulator {
                 simulators: Vec::new(),
                 iter_limit: IterLimit::new(100),
-                fitness_type: FitnessType::Maximize,
                 earlystopper: None,
                 duration: Some(0),
                 error: None,
@@ -75,16 +76,6 @@ impl<T: Phenotype> SimulatorBuilder<T> {
     /// Returns itself for chaining purposes.
     pub fn set_max_iters(mut self, i: u64) -> Self {
         self.sim.iter_limit = IterLimit::new(i);
-        self
-    }
-
-    /// Set the fitness type of the resulting `Simulator`,
-    /// determining whether the `Simulator` will try to maximize
-    /// or minimize the fitness values of `Phenotype`s.
-    ///
-    /// Returns itself for chaining purposes.
-    pub fn set_fitness_type(mut self, t: FitnessType) -> Self {
-        self.sim.fitness_type = t;
         self
     }
 
