@@ -1,6 +1,7 @@
 use pheno::Phenotype;
 
 pub mod seq;
+pub mod par;
 pub mod select;
 mod iterlimit;
 mod earlystopper;
@@ -39,15 +40,14 @@ pub enum RunResult {
 }
 
 /// A `Simulation` is an execution of a genetic algorithm.
-pub trait Simulation<T: Phenotype, S> where S: select::Selector<T> {
+pub trait Simulation<T: Phenotype> {
     /// A `Builder` is used to create instances of a `Simulation`.
     type B: Builder<Box<Self>>;
 
     /// Create a `Builder` to create an instance.
     /// Because the population is a required parameter, you have to pass it here,
     /// instead of using a builder function.
-    /// The same is the case for the selector.
-    fn builder(population: &Vec<Box<T>>, selector: Box<S>) -> Self::B;
+    fn builder(population: &Vec<Box<T>>) -> Self::B;
     /// Run the simulation completely.
     fn run(&mut self) -> RunResult;
     /// Make one step in the simulation. This function returns a `StepResult`:
