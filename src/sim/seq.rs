@@ -45,6 +45,11 @@ impl<T: Phenotype> Simulation<T> for Simulator<T> {
     }
 
     fn step(&mut self) -> StepResult {
+        if self.population.is_empty() {
+            self.error = Some(format!("Tried to run a simulator without a population, \
+                                       or the population was empty."));
+            return StepResult::Failure;
+        }
         let time_start = SteadyTime::now();
         let should_stop = match self.earlystopper {
             Some(ref x) => self.iter_limit.reached() || x.reached(),
@@ -290,6 +295,13 @@ mod tests {
                          .set_population(&population)
                          .set_selector(Box::new(selector))
                          .build();
+        s.run();
+        assert!(s.get().is_err());
+    }
+
+    #[test]
+    fn test_no_population() {
+        let mut s: seq::Simulator<Test> = *seq::Simulator::builder().build();
         s.run();
         assert!(s.get().is_err());
     }
