@@ -99,7 +99,9 @@
 //!     tests.push(Box::new(Test { i: i + 10 }));
 //! }
 //! // Create a simulator using a builder.
-//! let mut s = *seq::Simulator::builder(tests, Box::new(sim::select::TournamentSelector::new(4, 4)))
+//! let mut s = *seq::Simulator::builder()
+//!                   .set_population(&tests)
+//!                   .set_selector(Box::new(sim::select::TournamentSelector::new(4, 4)))
 //!                   .set_max_iters(1000)
 //!                   .set_fitness_type(sim::FitnessType::Minimize)
 //!                   .build();
