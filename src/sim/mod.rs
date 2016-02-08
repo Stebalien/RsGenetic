@@ -64,6 +64,10 @@ pub trait Simulation<T: Phenotype> {
     /// This function will either return the best performing individual,
     /// or an error string indicating what went wrong.
     fn get(&self) -> SimResult<T>;
+    /// Get a reference to the current population.
+    ///
+    /// If there is no valid current population, this function returns `None`.
+    fn population(&self) -> Option<&Vec<Box<T>>>;
     /// Get the number of nanoseconds spent running, or `None` in case of an overflow.
     ///
     /// When `Self` is `par::Simulator`, i.e. a parallel simulator is used,

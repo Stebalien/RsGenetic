@@ -53,6 +53,14 @@ impl<T: Phenotype> Simulation<T> for Simulator<T> {
         Err(String::new())
     }
 
+    fn population(&self) -> Option<&Vec<Box<T>>> {
+        if self.simulators.len() > 0 {
+            self.simulators[0].population()
+        } else {
+            None
+        }
+    }
+
     fn iterations(&self) -> u64 {
         self.iter_limit.get()
     }

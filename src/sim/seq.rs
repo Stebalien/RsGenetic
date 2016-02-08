@@ -132,6 +132,10 @@ impl<T: Phenotype> Simulation<T> for Simulator<T> {
         }
     }
 
+    fn population(&self) -> Option<&Vec<Box<T>>> {
+        Some(&self.population)
+    }
+
     fn iterations(&self) -> u64 {
         self.iter_limit.get()
     }
