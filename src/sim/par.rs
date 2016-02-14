@@ -13,10 +13,13 @@ use super::select::*;
 use super::iterlimit::*;
 use super::earlystopper::*;
 use time::SteadyTime;
+use std::thread;
+use std::sync::Arc;
 
 /// A parallel implementation of `::sim::Simulation`.
 /// The genetic algorithm runs on multiple threads
 /// on the same machine.
+#[derive(Clone)]
 pub struct Simulator<T: Phenotype>
 {
     simulators: Vec<seq::Simulator<T>>,
@@ -42,7 +45,36 @@ impl<T: Phenotype> Simulation<T> for Simulator<T> {
     }
 
     fn step(&mut self) -> StepResult {
-        StepResult::Failure
+        let time_start = SteadyTime::now();
+        let should_stop = match self.earlystopper {
+            Some(ref x) => self.iter_limit.reached() || x.reached(),
+            None => self.iter_limit.reached(),
+        };
+        if should_stop {
+            return StepResult::Done;
+        }
+
+        for mut sim in self.simulators.clone() {
+            let mut sim_arc = Arc::new(sim);
+
+            thread::spawn(move || {
+                sim_arc.step();
+            });
+        }
+
+        self.iter_limit.inc();
+
+        let this_time = (SteadyTime::now() - time_start).num_nanoseconds();
+        self.duration = match self.duration {
+            Some(x) => {
+                match this_time {
+                    Some(y) => Some(x + y),
+                    None => None,
+                }
+            }
+            None => None,
+        };
+        StepResult::Success // Not done yet, but successful
     }
 
     fn run(&mut self) -> RunResult {

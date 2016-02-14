@@ -22,7 +22,7 @@ pub use self::roulette::RouletteSelector;
 pub type Parents<T> = Vec<(Box<T>, Box<T>)>;
 
 /// A `Selector` can select `Parents` for a new iteration of a `Simulation`.
-pub trait Selector<T: Phenotype> {
+pub trait Selector<T: Phenotype> : Send + Sync {
     /// Select elements from a `population`, either maximizing or minimizing the fitness
     /// (`fitness_type`).
     ///

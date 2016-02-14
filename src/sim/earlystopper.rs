@@ -1,6 +1,7 @@
 use super::iterlimit::*;
 
 /// Used for early stopping.
+#[derive(Clone)]
 pub struct EarlyStopper {
     /// Minimum difference required for early stopping.
     delta: f64,

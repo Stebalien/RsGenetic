@@ -1,4 +1,5 @@
 /// An iteration limiter.
+#[derive(Clone)]
 pub struct IterLimit {
     /// Maximum number of iterations allowed.
     max: u64,

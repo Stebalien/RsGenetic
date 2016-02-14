@@ -26,6 +26,20 @@ pub struct Simulator<T: Phenotype>
     error: Option<String>,
 }
 
+impl <T: Phenotype> Clone for Simulator<T> {
+    fn clone(&self) -> Self {
+        Simulator {
+            population: self.population.clone(),
+            iter_limit: self.iter_limit.clone(),
+            fitness_type: self.fitness_type.clone(),
+            earlystopper: self.earlystopper.clone(),
+            duration: self.duration.clone(),
+            error: self.error.clone(),
+            selector: self.selector, // TODO: https://users.rust-lang.org/t/solved-is-it-possible-to-clone-a-boxed-trait-object/1714/5
+        }
+    }
+}
+
 impl<T: Phenotype> Simulation<T> for Simulator<T> {
     type B = SimulatorBuilder<T>;
 

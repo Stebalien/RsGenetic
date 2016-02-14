@@ -7,6 +7,7 @@ use std::cmp::Ordering;
 /// Selects phenotypes with a probability based on their fitness value.
 ///
 /// Commonly known as *Roulette Wheel Selection*.
+#[derive(Clone)]
 pub struct RouletteSelector {
     count: usize,
 }

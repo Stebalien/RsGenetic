@@ -4,6 +4,7 @@ use super::super::FitnessType;
 use std::cmp::Ordering;
 
 /// Selects best performing phenotypes from the population.
+#[derive(Clone)]
 pub struct MaximizeSelector {
     count: usize,
 }

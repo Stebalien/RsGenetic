@@ -40,7 +40,7 @@ pub enum RunResult {
 }
 
 /// A `Simulation` is an execution of a genetic algorithm.
-pub trait Simulation<T: Phenotype> {
+pub trait Simulation<T: Phenotype> : Clone {
     /// A `Builder` is used to create instances of a `Simulation`.
     type B: Builder<Box<Self>>;
 
